@@ -55,5 +55,5 @@ jobs:
         aws ssm send-command \
           --instance-ids i-030a9e1f26d25f685 \
           --document-name "AWS-RunShellScript" \
-          --parameters commands='["pkill -f java", "sleep 30", "cd /home/ubuntu/java", "nohup java -jar -Dspring.profiles.active=production -Dspring.datasource.username=${{ secrets.DATASOURCE_USERNAME }} -Dspring.datasource.password=${{ secrets.DATASOURCE_PASSWORD }} Server-0.0.1-SNAPSHOT.jar > log.txt 2>&1 &", "sleep 5"]' \
+          --parameters commands='["pkill -f java", "while lsof -i:80 -t; do sleep 1; done", "cd /home/ubuntu/java", "nohup java -jar -Dspring.profiles.active=production -Dspring.datasource.username=${{ secrets.DATASOURCE_USERNAME }} -Dspring.datasource.password=${{ secrets.DATASOURCE_PASSWORD }} Server-0.0.1-SNAPSHOT.jar > log.txt 2>&1 &", "sleep 5"]' \
           --output text
