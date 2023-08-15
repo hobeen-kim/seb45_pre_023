@@ -30,6 +30,15 @@ public class QuestionRecommend extends BaseEntity {
     @JoinColumn(name = "question_id")
     private Question question;
 
-
-
+    public Long getRecommendId() {
+        return QuestionRecommendId;
+    }
+    public void applyRecommend() {
+        if (this.type == TypeEnum.UPVOTE) {
+            this.question.applyRecommend(TypeEnum.UPVOTE);
+        } else if (this.type == TypeEnum.DOWNVOTE) {
+            this.question.applyRecommend(TypeEnum.DOWNVOTE);
+        }
+    }
 }
+

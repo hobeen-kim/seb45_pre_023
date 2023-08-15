@@ -29,9 +29,11 @@ public class Reply extends BaseEntity {
     @JoinColumn(name = "answer_id")
     private Answer answer;
 
-    public static Reply createReply(String content) {
+    public static Reply createReply(String content, Member member, Answer answer) {
         return Reply.builder()
                 .content(content)
+                .member(member)
+                .answer(answer)
                 .build();
     }
     public void setReplyContent(String newContent) {
@@ -39,3 +41,4 @@ public class Reply extends BaseEntity {
 
     }
 }
+

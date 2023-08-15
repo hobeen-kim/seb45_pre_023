@@ -25,8 +25,11 @@ public class Answer extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
+    private Integer upvoteCount;
 
-    private Integer views;
+    private Integer downvoteCount;
+
+
 
     @OneToMany(mappedBy = "answer")
     private List<AnswerRecommend> answerRecommends = new ArrayList<>();
@@ -42,9 +45,14 @@ public class Answer extends BaseEntity {
     @OneToMany(mappedBy = "answer")
     private List<Reply> replies = new ArrayList<>();
 
-    public static Answer createAnswer(String content) {
+
+
+
+    public static Answer createAnswers(String content, Member member, Question question) {
         return Answer.builder()
                 .content(content)
+                .member(member)
+                .question(question)
                 .build();
     }
     public void setAnswerContent(String newContent) {
@@ -52,5 +60,11 @@ public class Answer extends BaseEntity {
 
     }
 
+    public void increaseRecommendCount() {
+        upvoteCount++;
+    }
 
+    public void increaseDownvoteCount() {
+        downvoteCount++;
+    }
 }
