@@ -17,15 +17,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import sixman.stackoverflow.auth.jwt.service.CustomUserDetails;
+import sixman.stackoverflow.domain.answer.service.AnswerService;
 import sixman.stackoverflow.domain.member.entity.Authority;
 import sixman.stackoverflow.domain.member.entity.Member;
 import sixman.stackoverflow.domain.member.entity.MyInfo;
+import sixman.stackoverflow.domain.question.repository.QuestionRepository;
+import sixman.stackoverflow.domain.question.service.QuestionService;
 import sixman.stackoverflow.module.aws.service.S3Service;
 import sixman.stackoverflow.module.email.service.MailService;
 import sixman.stackoverflow.module.redis.service.RedisService;
 
 import javax.persistence.EntityManager;
 import java.util.Collections;
+import java.util.List;
 
 @Transactional
 @SpringBootTest
@@ -36,6 +40,9 @@ public abstract class ServiceTest {
     @MockBean protected S3Service s3Service;
     @MockBean protected RedisService redisService;
     @MockBean protected JavaMailSender emailSender;
+    @Autowired protected AnswerService answerService;
+    @Autowired protected QuestionService questionService;
+    @Autowired protected QuestionRepository questionRepository;
     @Autowired protected PasswordEncoder passwordEncoder;
     @Autowired protected EntityManager em;
 
@@ -45,7 +52,13 @@ public abstract class ServiceTest {
                 .nickname("test")
                 .password(passwordEncoder.encode("1234abcd!"))
                 .authority(Authority.ROLE_USER)
-                .myInfo(MyInfo.builder().image("images/test.png").build())
+                .myInfo(MyInfo.builder()
+                        .myIntro("test intro")
+                        .title("title")
+                        .location("location")
+                        .accounts(List.of("account1", "account2"))
+                        .image("images/test.png")
+                        .build())
                 .enabled(true)
                 .build();
     }
