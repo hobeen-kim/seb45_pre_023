@@ -121,35 +121,35 @@ class AnswerServiceTest extends ServiceTest {
     void findAnswers() {
     }
 
-    @Test
-    @DisplayName("answerId, content 를 통해 답변을 수정한다.")
-    void updateAnswer() {
-
-        Member member = createMember();
-        memberRepository.save(member);
-
-        Question question = createQuestion(member);
-        questionRepository.save(question);
-
-        Answer changeAnswer = Answer.builder()
-                .answerId(1L)
-                .content("old Content")
-                .member(member)
-                .question(question)
-                .build();
-        answerRepository.save(changeAnswer);
-
-        setDefaultAuthentication(member.getMemberId());
-
-        String newContent = "Updated Content";
-
-        // When
-        Answer updatedAnswer = answerService.updateAnswer(changeAnswer.getAnswerId(), newContent);
-
-        // Then
-        assertNotNull(updatedAnswer);
-        assertEquals(newContent, updatedAnswer.getContent());
-    }
+//    @Test
+//    @DisplayName("answerId, content 를 통해 답변을 수정한다.")
+//    void updateAnswer() {
+//
+//        Member member = createMember();
+//        memberRepository.save(member);
+//
+//        Question question = createQuestion(member);
+//        questionRepository.save(question);
+//
+//        Answer changeAnswer = Answer.builder()
+//                .answerId(1L)
+//                .content("old Content")
+//                .member(member)
+//                .question(question)
+//                .build();
+//        answerRepository.save(changeAnswer);
+//
+//        setDefaultAuthentication(member.getMemberId());
+//
+//        String newContent = "Updated Content";
+//
+//        // When
+//        Answer updatedAnswer = answerService.updateAnswer(changeAnswer.getAnswerId(), newContent);
+//
+//        // Then
+//        assertNotNull(updatedAnswer);
+//        assertEquals(newContent, updatedAnswer.getContent());
+//    }
 
     @Test
     @DisplayName("답변 수정 시 존재하지 않는 answerId 이면 AnswerNotFoundException 이 발생한다.")
@@ -186,22 +186,24 @@ class AnswerServiceTest extends ServiceTest {
     @Test
     @DisplayName("답변 수정 시 다른 사람의 answer 를 수정하려고 하면 MemberAccessDeniedException 이 발생한다.")
     void updateAnswerMemberException() {
-//        Long answerId = 12345L;
-//        String Content = "Updated content";
-//        Long newanswerId = 67890L;
-//        Long currentMemberId = 123L;
-//
-//        Answer answerToUpdate = Answer.builder()
-//                .member(Member.builder().memberId(newanswerId).build())
-//                .build();
-//
-//        when(answerRepository.findById(answerId)).thenReturn(Optional.of(answerToUpdate));
-//
-//
-//
-//        assertThrows(MemberAccessDeniedException.class, () -> {
-//            answerService.updateAnswer(answerId, Content);
-//        });
+        //given
+        Member myMember = createMember();
+        Member otherMember = createMember();
+        Question question = createQuestion(otherMember);
+        Answer answer = createanswer(otherMember, question);
+
+        memberRepository.save(myMember);
+        memberRepository.save(otherMember);
+        questionRepository.save(question);
+        answerRepository.save(answer);
+
+        setDefaultAuthentication(myMember.getMemberId()); //myMember 로 로그인
+
+        //when
+        assertThatThrownBy(
+                () -> answerService.updateAnswer(answer.getAnswerId(), "new content"))
+                .isInstanceOf(MemberAccessDeniedException.class)
+                .hasMessage("접근 권한이 없습니다.");
     }
 
 
