@@ -156,6 +156,9 @@ Codestates pre-project Stackoverflow 클론 코딩입니다.
 
 - 프로필 내용 변경 페이지
 
+</details>
+
+
 <br>
 
 
