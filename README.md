@@ -1,80 +1,61 @@
 
-### 팀명 : Sixman
+# <div align=center>팀명 : Sixman</div>
 
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 고범석 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 최준성 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 김기완 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-|:---:|:---:|:---:|  
-| - 팀장 <br> - Back-end  <br> - [GitHub](https://github.com/kobeomseok95) | - 기획자 <br> - Back-end<br>- DevOps <Br> - [GitHub](https://github.com/backtony) | - PM <br>- Front-end <br> - [GitHub](https://github.com/kiwan97)
-
- </div>
-
-<div align="center">
- <img src="/images/soma.PNG" alt="soma-logo">
-</div>
-
-
-
-## 💁‍♂️ Detail Role <a name = "role"></a>
-+ [고범석](https://github.com/kobeomseok95)
-  - 팀장
-  - Back-end
-  - 그룹, 게시글, 클래스, 쿠폰, 리뷰, 문의, 결제 구현
-  - DB 클래스 정보를 Elasticsearch로 옮기는 배치 작업 및 Elasticsearch 구현
-  - DB 이중화 구성  
-  - Swagger, REST docs 문서화
-  
-<Br>
-
-+ [최준성(backtony)](https://github.com/backtony)
-  - 기획자 
-  - Back-end & DevOps
-  - 로그인, 마이페이지, 찜, 매칭, 알림, 공지사항, 리워드, 결제 취소 배치 작업 구현
-  - 전체적인 AWS 환경 구축
-  - Jenkins CI/CD 구축
-  - Redis 클러스터 및 모니터링 구축
-  - 로그 모니터링용 ELK 구축
-  - Swagger, REST docs 문서화
-
-<Br>
-
-+ [김기완](https://github.com/kiwan97)
-  - PM
-  - Front-end
-  - 모든 Front-end 구현
-
-<Br>
-
-
+| **Front End**  | **정회엽(팀장)**                                             | **이인우**    | **이종범**                                           |
+| -------------- | ------------------------------------------------------------ | ------------- | ---------------------------------------------------- |
+| **Front 역할** |                                                              |               |                                                      |
+| **Back End**   | **김호빈(부팀장)**                                           | **박정우**    | **임한준**                                           |
+| **Back 역할**  | 로그인, 회원가입 API<br />Spring Security<br />AWS 및 CI/CD 구현 | 질문 API 구현 | 답변, 댓글 API 구현<br />엔티티 작성 및 DB 설계 구현 |
 
  <br>
 
-### Languages
-
-<img alt="HTML5" src ="https://img.shields.io/badge/HTML5-E34F26.svg?&style=for-the-badge&logo=HTML5&logoColor=white"/><img alt="CSS3" src ="https://img.shields.io/badge/CSS3-1572B6.svg?&style=for-the-badge&logo=CSS3&logoColor=white"/>
-<img alt="JavaScript" src ="https://img.shields.io/badge/JavaScript-F7DF1E.svg?&style=for-the-badge&logo=JavaScript&logoColor=white"/>
-<img alt="TypeScript" src ="https://img.shields.io/badge/TypeScript-3178C6.svg?&style=for-the-badge&logo=TypeScript&logoColor=white"/>
-<img alt="Java" src ="https://img.shields.io/badge/Java-007396.svg?&style=for-the-badge&logo=Java&logoColor=white"/>
+# <div align=center>📚 STACKS</div>
 
 
-<br>
 
-### Technologies
-<img alt="Git" src ="https://img.shields.io/badge/Git-F05032.svg?&style=for-the-badge&logo=Git&logoColor=white"/><img alt="GitLab" src ="https://img.shields.io/badge/GitLab-FCA121.svg?&style=for-the-badge&logo=GitLab&logoColor=white"/>
-<img alt="Jira" src ="https://img.shields.io/badge/Jira-0052CC.svg?&style=for-the-badge&logo=jira&logoColor=white"/>
-<img alt="AWS" src ="https://img.shields.io/badge/AWS-232F3E.svg?&style=for-the-badge&logo=amazonaws&logoColor=white"/>
-<img alt="Linux" src ="https://img.shields.io/badge/Linux-FCC624.svg?&style=for-the-badge&logo=linux&logoColor=white"/>
-<img alt="Jenkins" src ="https://img.shields.io/badge/Jenkins-D24939.svg?&style=for-the-badge&logo=Jenkins&logoColor=white"/>
-<img alt="Docker" src ="https://img.shields.io/badge/Docker-4479A1.svg?&style=for-the-badge&logo=Docker&logoColor=white"/>
-<img alt="React" src ="https://img.shields.io/badge/React-61DAFB.svg?&style=for-the-badge&logo=React&logoColor=white"/>
-<img alt="TypeScript" src ="https://img.shields.io/badge/TypeScript-3178C6.svg?&style=for-the-badge&logo=TypeScript&logoColor=white"/>
-<img alt="FCM" src ="https://img.shields.io/badge/FCM-FFCA28.svg?&style=for-the-badge&logo=firebase&logoColor=white"/>
-<img alt="Spring Boot" src ="https://img.shields.io/badge/Spring Boot-6DB33F.svg?&style=for-the-badge&logo=springboot&logoColor=white"/>
-<img alt="Spring Batch" src ="https://img.shields.io/badge/Spring Batch-6DB33F.svg?&style=for-the-badge&logo=springbatch&logoColor=white"/>
-<img alt="JPA" src ="https://img.shields.io/badge/jpa-6DB33F.svg?&style=for-the-badge&logo=jpa&logoColor=white"/>
-<img alt="queryDsl" src ="https://img.shields.io/badge/querydsl-4479A1.svg?&style=for-the-badge&logo=querydsl&logoColor=white"/>
-<img alt="mysql" src ="https://img.shields.io/badge/mysql-4479A1.svg?&style=for-the-badge&logo=mysql&logoColor=white"/>
-<img alt="Redis" src ="https://img.shields.io/badge/Redis-DC382D.svg?&style=for-the-badge&logo=redis&logoColor=white"/>
-<img alt="ELK" src ="https://img.shields.io/badge/ELK-005571.svg?&style=for-the-badge&logo=elasticstack&logoColor=white"/>
-<img alt="nGrinder" src ="https://img.shields.io/badge/nGrinder-03C75A.svg?&style=for-the-badge&logo=naver&logoColor=white"/>
+<div align=center> 
+  <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"> 
+  <img src="https://img.shields.io/badge/c++-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white">
+  <img src="https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=white"> 
+  <br>
+  <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> 
+  <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"> 
+  <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"> 
+  <img src="https://img.shields.io/badge/jquery-0769AD?style=for-the-badge&logo=jquery&logoColor=white">
+  <br>
+
+  <img src="https://img.shields.io/badge/oracle-F80000?style=for-the-badge&logo=oracle&logoColor=white"> 
+  <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"> 
+  <img src="https://img.shields.io/badge/mariaDB-003545?style=for-the-badge&logo=mariaDB&logoColor=white"> 
+  <img src="https://img.shields.io/badge/mongoDB-47A248?style=for-the-badge&logo=MongoDB&logoColor=white">
+  <img src="https://img.shields.io/badge/firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white">
+  <br>
+
+  <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> 
+  <img src="https://img.shields.io/badge/vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white"> 
+  <img src="https://img.shields.io/badge/angular.js-DD0031?style=for-the-badge&logo=angularjs&logoColor=white">
+  <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white">
+  <br>
+
+  <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white"> 
+  <img src="https://img.shields.io/badge/express-000000?style=for-the-badge&logo=express&logoColor=white">
+  <img src="https://img.shields.io/badge/django-092E20?style=for-the-badge&logo=django&logoColor=white">
+  <img src="https://img.shields.io/badge/flask-000000?style=for-the-badge&logo=flask&logoColor=white">
+  <img src="https://img.shields.io/badge/flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white">
+
+  <img src="https://img.shields.io/badge/bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white">
+  <br>
+
+  <img src="https://img.shields.io/badge/linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"> 
+  <img src="https://img.shields.io/badge/amazonaws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white"> 
+  <img src="https://img.shields.io/badge/apache tomcat-F8DC75?style=for-the-badge&logo=apachetomcat&logoColor=white">
+  <br>
+
+  <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
+  <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
+  <img src="https://img.shields.io/badge/fontawesome-339AF0?style=for-the-badge&logo=fontawesome&logoColor=white">
+  <br>
+</div>
 
 
 
@@ -108,7 +89,6 @@
 취미 생활 및 자기계발 활동에 금전적으로 투자하는 사람들이 지속적으로 증가하고 있으며, 20 ~ 30대 대상 685명 설문조사 결과 사람들은 취미를 혼자보다 함께 즐기고 싶어할뿐만 아니라 전체의 75% 이상이
 처음만나는 사람과도 함께 취미를 즐기고 싶다고 답변했습니다. 또한, 유료로 취미생활 및 자기계발 분야 참여시 전체의 63%가 오프라인 방식을 선호하였습니다.
 저희는 취미 관련 오프라인 유료 클래스의 수요가 충분하다는 것을 파악하였고, 기존 업체들의 문제점들을 보완하여 오프라인 클래스 중개 플랫폼을 서비스하고자 합니다.
-
 </details>
 
 <br>
