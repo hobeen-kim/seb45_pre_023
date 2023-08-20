@@ -42,9 +42,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiSingleResponse<Void>> handleTypeMismatchException(
             TypeMismatchException e) {
 
-        String value = (String) e.getValue();
+        Object value = e.getValue();
 
-        return new ResponseEntity<>(ApiSingleResponse.fail(new RequestTypeMismatchException(value)), HttpStatus.BAD_REQUEST);
+        String stringValue = value == null ? "null" : value.toString();
+
+        return new ResponseEntity<>(ApiSingleResponse.fail(new RequestTypeMismatchException(stringValue)), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -71,7 +73,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiSingleResponse<Void>> handleException(Exception e) {
 
-        log.error("Unknown error happened: {}", e.getMessage());
+        log.error("Unknown error {} happened: {}", e.getClass().getName(), e.getMessage());
         e.printStackTrace();
 
         return new ResponseEntity<>(ApiSingleResponse.fail(e), HttpStatus.INTERNAL_SERVER_ERROR);
