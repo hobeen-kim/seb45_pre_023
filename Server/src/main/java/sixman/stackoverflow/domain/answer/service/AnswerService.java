@@ -2,8 +2,11 @@ package sixman.stackoverflow.domain.answer.service;
 
 import lombok.Getter;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sixman.stackoverflow.auth.utils.SecurityUtil;
@@ -13,12 +16,16 @@ import sixman.stackoverflow.domain.answer.repository.AnswerRepository;
 
 import sixman.stackoverflow.domain.answer.service.request.AnswerCreateServiceRequest;
 import sixman.stackoverflow.domain.answer.service.response.AnswerResponse;
+import sixman.stackoverflow.domain.answerrecommend.answerrecommendrepository.AnswerRecommendRepository;
+import sixman.stackoverflow.domain.answerrecommend.entity.AnswerRecommend;
 import sixman.stackoverflow.domain.member.entity.Member;
 import sixman.stackoverflow.domain.member.repository.MemberRepository;
+import sixman.stackoverflow.domain.question.controller.dto.AnswerSortRequest;
 import sixman.stackoverflow.domain.question.entity.Question;
 import sixman.stackoverflow.domain.question.repository.QuestionRepository;
 import sixman.stackoverflow.domain.reply.entity.Reply;
 import sixman.stackoverflow.domain.reply.repository.ReplyRepository;
+import sixman.stackoverflow.global.entity.TypeEnum;
 import sixman.stackoverflow.global.exception.businessexception.answerexception.AnswerNotFoundException;
 import sixman.stackoverflow.global.exception.businessexception.memberexception.MemberAccessDeniedException;
 import sixman.stackoverflow.global.exception.businessexception.memberexception.MemberNotFoundException;
@@ -38,14 +45,18 @@ public class AnswerService {
     private final QuestionRepository questionRepository;
     private final ReplyRepository replyRepository;
 
+    private final AnswerRecommendRepository answerRecommendRepository;
+
     public AnswerService(AnswerRepository answerRepository,
                          MemberRepository memberRepository,
                          QuestionRepository questionRepository,
-                         ReplyRepository replyRepository) {
+                         ReplyRepository replyRepository,
+                         AnswerRecommendRepository answerRecommendRepository) {
         this.answerRepository = answerRepository;
         this.memberRepository = memberRepository;
         this.questionRepository = questionRepository;
         this.replyRepository = replyRepository;
+        this.answerRecommendRepository = answerRecommendRepository;
     }
 
 
@@ -64,25 +75,38 @@ public class AnswerService {
         return answer.getAnswerId();
 
     }
-    @Transactional(readOnly = true)
-    public AnswerResponse findAnswer(long answerId) {
+
+    public AnswerResponse findAnswer(Long answerId) {
+        if (answerId == null) {
+            throw new AnswerNotFoundException();
+        }
+        Long memberId = SecurityUtil.getCurrentId();
+
+        Optional<Member> memberOptional = memberRepository.findById(memberId);
+        Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
+
         Optional<Answer> answerOptional = answerRepository.findById(answerId);
         Answer answer = answerOptional.orElseThrow(AnswerNotFoundException::new);
 
-        return AnswerResponse.createAnswerResponse(answer);
+        TypeEnum answerRecommendType = getRecommendTypeForMemberAndAnswer(member, answer);
+
+        return AnswerResponse.createAnswerResponse(answer, answerRecommendType);
+
+
     }
 
 
     public Page<AnswerResponse> findAnswers(Long questionId, Pageable pageable) {
-        Optional<Question> optionalQuestion = questionRepository.findByQuestionId(questionId);
+        Optional<Question> optionalQuestion = questionRepository.findById(questionId);
 
         if (optionalQuestion.isPresent()) {
             Question question = optionalQuestion.get();
 
             Page<Answer> answers = answerRepository.findAllByQuestion(question, pageable);
+            Pageable replyPageable = PageRequest.of(0,5, Sort.by(AnswerSortRequest.CREATED_DATE.getValue()).descending());
 
             Page<AnswerResponse> answerResponses = answers.map(answer -> {
-                Page<Reply> replyPage = replyRepository.findByAnswer(answer, pageable);
+                Page<Reply> replyPage = replyRepository.findByAnswer(answer, replyPageable);
                 return AnswerResponse.of(answer, replyPage);
             });
 
@@ -135,5 +159,11 @@ public class AnswerService {
             throw new MemberAccessDeniedException();
         }
     }
+
+    private TypeEnum getRecommendTypeForMemberAndAnswer(Member member, Answer answer) {
+        Optional<AnswerRecommend> answerRecommendOptional = answerRecommendRepository.findByMemberAndAnswer(member, answer);
+        return answerRecommendOptional.map(AnswerRecommend::getType).orElse(null);
+    }
+
 }
 

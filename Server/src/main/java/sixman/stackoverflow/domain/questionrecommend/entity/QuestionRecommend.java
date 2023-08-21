@@ -33,11 +33,14 @@ public class QuestionRecommend extends BaseEntity {
     public Long getRecommendId() {
         return QuestionRecommendId;
     }
-    public void applyRecommend() {
-        if (this.type == TypeEnum.UPVOTE) {
-            this.question.applyRecommend(TypeEnum.UPVOTE);
-        } else if (this.type == TypeEnum.DOWNVOTE) {
-            this.question.applyRecommend(TypeEnum.DOWNVOTE);
+
+    public void setType(TypeEnum type) { this.type = type; }
+
+    public TypeEnum getRecommendTypeCurrentUser(Long currentUserId) {
+        if (this.member.getMemberId().equals(currentUserId)) {
+            return this.type;
+        } else {
+            return null;
         }
     }
 }

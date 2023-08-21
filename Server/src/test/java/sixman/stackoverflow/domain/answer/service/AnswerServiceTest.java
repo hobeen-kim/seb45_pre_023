@@ -6,12 +6,18 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import sixman.stackoverflow.domain.answer.entitiy.Answer;
 import sixman.stackoverflow.domain.answer.repository.AnswerRepository;
 import sixman.stackoverflow.domain.answer.service.request.AnswerCreateServiceRequest;
 import sixman.stackoverflow.domain.answer.service.response.AnswerResponse;
 import sixman.stackoverflow.domain.member.entity.Member;
 import sixman.stackoverflow.domain.member.repository.MemberRepository;
+import sixman.stackoverflow.domain.question.controller.dto.AnswerSortRequest;
+import sixman.stackoverflow.domain.question.controller.dto.QuestionSortRequest;
 import sixman.stackoverflow.domain.question.entity.Question;
 import sixman.stackoverflow.domain.question.repository.QuestionRepository;
 import sixman.stackoverflow.domain.question.service.QuestionService;
@@ -24,6 +30,10 @@ import sixman.stackoverflow.global.exception.businessexception.questionexception
 import sixman.stackoverflow.global.testhelper.ServiceTest;
 
 import java.lang.reflect.Method;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -54,12 +64,8 @@ class AnswerServiceTest extends ServiceTest {
         Member member = createMember();
         memberRepository.save(member);
 
-
         Question question = createQuestion(member);
         questionRepository.save(question);
-
-
-
 
         setDefaultAuthentication(member.getMemberId());
 
@@ -118,19 +124,15 @@ class AnswerServiceTest extends ServiceTest {
         Answer answer = createanswer(member, question);
         answerRepository.save(answer);
 
-
-
         setDefaultAuthentication(member.getMemberId());
-
-
 
         //when
         AnswerResponse answerResponse = answerService.findAnswer(answer.getAnswerId());
 
         //then
-        assertNotNull(answerResponse);
         assertThat(answerResponse.getContent()).isEqualTo(answer.getContent());
         assertThat(answerResponse.getMember().getMemberId()).isEqualTo(member.getMemberId());
+        assertThat(answerResponse.getAnswerId()).isEqualTo(answer.getAnswerId());
     }
 
 
@@ -139,22 +141,85 @@ class AnswerServiceTest extends ServiceTest {
     void findAnswerException() {
 
         // given
-        long answerForFindId = 12345L;
+        Long answerId = null;
 
         // When,Then
-        assertThrows(AnswerNotFoundException.class, () -> {
-            answerService.findAnswer(answerForFindId);
-        });
+        assertThrows(AnswerNotFoundException.class, () ->
+            answerService.findAnswer(answerId));
+
     }
 
     @Test
-    @DisplayName("questionId 를 통해 답변 목록을 페이징으로 찾아서 반환한다.")
-    void findAnswers() { // 정우님이랑 이야기
+    @DisplayName("questionId 를 통해 답변 목록을 페이징으로 찾아서 최신순으로 반환한다.")
+    void findAnswersBySortCreatedDate() {
+        // given
+        Member member = createMember();
+        Question question = createQuestion(member);
+
+        for(int i=0; i<5; i++) {
+            Answer answer = createanswerdetail(member, question,i);
+            answerRepository.save(answer);
+        }
+
+        memberRepository.save(member);
+        questionRepository.save(question);
+
+        Pageable pageable = PageRequest.of(0, 5, Sort.by(AnswerSortRequest.CREATED_DATE.getValue()).descending());
+
+        //when
+        Page<AnswerResponse> result = answerService.findAnswers(question.getQuestionId(), pageable);
+
+        // then
+        assertThat(result.getContent()).hasSize(5);
+
+        List<AnswerResponse> answerList = result.getContent();
+        Instant previousCreatedDate = Instant.now();
+
+        for (AnswerResponse answer : answerList) {
+            LocalDateTime currentLocalDateTime = answer.getCreatedDate();
+            Instant currentCreatedDate = currentLocalDateTime.atZone(ZoneId.systemDefault()).toInstant();
+
+            assertThat(currentCreatedDate).isBeforeOrEqualTo(previousCreatedDate);
+            previousCreatedDate = currentCreatedDate;
+        }
+    }
+
+    @Test
+    @DisplayName("questionId 를 통해 답변 목록을 페이징으로 찾아서 추천수 순서로 반환한다.")
+    void findAnswersBySortRecommend() {
+        // given
+        Member member = createMember();
+        Question question = createQuestion(member);
+
+        for(int i=0; i<5; i++) {
+            Answer answer = createanswerdetail(member, question,i);
+            answerRepository.save(answer);
+        }
+
+        memberRepository.save(member);
+        questionRepository.save(question);
+
+        Pageable pageable2 = PageRequest.of(0, 5, Sort.by(AnswerSortRequest.RECOMMEND.getValue()).descending());
+
+        //when
+        Page<AnswerResponse> result2 = answerService.findAnswers(question.getQuestionId(), pageable2);
+
+        // then
+        assertThat(result2.getContent()).hasSize(5);
+
+        List<AnswerResponse> answerList = result2.getContent();
+        int previousRecommend = Integer.MAX_VALUE;
+
+        for (AnswerResponse answer : answerList) {
+            assertThat(answer.getRecommend()).isLessThanOrEqualTo(previousRecommend);
+            previousRecommend = answer.getRecommend();
+        }
+
     }
 
 
     @Test
-    @DisplayName("answerId, content 를 통해 답변을 수정한다.") // 깨지는 애
+    @DisplayName("answerId, content 를 통해 답변을 수정한다.")
     void updateAnswer() {
 
         //given
@@ -168,9 +233,6 @@ class AnswerServiceTest extends ServiceTest {
         answerRepository.save(answer);
 
 
-
-
-
         setDefaultAuthentication(member.getMemberId());
 
         String newContent = "Updated Content";
@@ -181,6 +243,8 @@ class AnswerServiceTest extends ServiceTest {
         // Then
         assertThat(updatedAnswer).isNotNull();
         assertThat(updatedAnswer.getContent()).isEqualTo(newContent);
+        assertThat(updatedAnswer.getMember().getMemberId()).isEqualTo(member.getMemberId());
+        assertThat(updatedAnswer.getAnswerId()).isEqualTo(answer.getAnswerId());
     }
 
 
@@ -190,39 +254,12 @@ class AnswerServiceTest extends ServiceTest {
     void updateAnswerException() {
 
         // given
-        long answerForUpdateId = 12345L;
+        Long answerForUpdateId = null;
 
         // When,Then
         assertThrows(AnswerNotFoundException.class, () -> {
             answerService.findAnswer(answerForUpdateId);
         });
-
-//        Member member = createMember();
-//        memberRepository.save(member);
-//
-//        Question question = createQuestion(member);
-//        questionRepository.save(question);
-//
-//        Answer existingAnswer = Answer.builder()
-//                .answerId(1L)
-//                .content("old Content11")
-//                .member(member)
-//                .question(question)
-//                .build();
-//        answerRepository.save(existingAnswer);
-//
-//        setDefaultAuthentication(member.getMemberId());
-//
-//        String newContent = "Updated Content11";
-//
-//        // When
-//        Answer updatedAnswer = answerService.updateAnswer(existingAnswer.getAnswerId(), newContent);
-//
-//        assertThrows(AnswerNotFoundException.class, () -> {
-//            answerService.updateAnswer();
-//        });
-
-
     }
 
     @Test
@@ -273,9 +310,6 @@ class AnswerServiceTest extends ServiceTest {
         //When
         answerService.deleteAnswer(answer.getAnswerId());
 
-
-        //Optional<Answer> deletedAnswer = answerRepository.findById(answer.getAnswerId());
-
         //Then
         boolean answerExists = answerRepository.existsById(answer.getAnswerId());
         org.junit.jupiter.api.Assertions.assertFalse(answerExists, "답변이 삭제되었으므로 해당 answerId의 답변이 더 이상 존재해서는 안됩니다.");
@@ -291,7 +325,7 @@ class AnswerServiceTest extends ServiceTest {
     void deleteAnswerException() {
 
         // Given
-        long answerForDeleteId = 12345L;
+        Long answerForDeleteId = null;
 
         // When, Then
         assertThrows(AnswerNotFoundException.class, () -> {

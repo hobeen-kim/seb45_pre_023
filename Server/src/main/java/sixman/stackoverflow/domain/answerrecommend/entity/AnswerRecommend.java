@@ -17,11 +17,12 @@ public class AnswerRecommend extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long AnswerRecommendId;
+    private Long answerRecommendId;
 
     public void setType(TypeEnum type) {
         this.type = type;
     }
+
 
     @Enumerated(EnumType.STRING)
     private TypeEnum type;
@@ -33,5 +34,13 @@ public class AnswerRecommend extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "answer_id")
     private Answer answer;
+
+    public TypeEnum getRecommendTypeCurrentUser(Long currentUserId) {
+        if (this.member.getMemberId().equals(currentUserId)) {
+            return this.type;
+        } else {
+            return null;
+        }
+    }
 
 }

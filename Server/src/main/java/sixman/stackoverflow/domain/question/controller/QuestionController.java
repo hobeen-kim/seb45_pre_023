@@ -23,6 +23,7 @@ import sixman.stackoverflow.domain.question.service.QuestionService;
 import sixman.stackoverflow.domain.question.service.response.QuestionDetailResponse;
 import sixman.stackoverflow.domain.question.service.response.QuestionResponse;
 import sixman.stackoverflow.global.entity.TypeEnum;
+import sixman.stackoverflow.global.exception.businessexception.memberexception.MemberBadCredentialsException;
 import sixman.stackoverflow.global.exception.businessexception.memberexception.MemberNotFoundException;
 import sixman.stackoverflow.global.exception.businessexception.questionexception.InvalidPageParameterException;
 import sixman.stackoverflow.global.response.ApiPageResponse;
@@ -83,21 +84,30 @@ public class QuestionController {
     public ResponseEntity<ApiSingleResponse<QuestionDetailResponse>> createQuestion(
             @RequestBody @Valid QuestionCreateApiRequest questionCreateApiRequest) {
 
-        Long memberId = SecurityUtil.getCurrentId();
+        if (SecurityUtil.isLogin()) {
 
-        Optional<Member> optionalMember = memberRepository.findById(memberId);
+            Optional<Long> loggedInUserIdOpt = Optional.ofNullable(SecurityUtil.getCurrentId());
+            if (!loggedInUserIdOpt.isPresent()) {
+                throw new MemberNotFoundException();
+            }
+            Long currentId = loggedInUserIdOpt.get();
 
-        if (optionalMember.isEmpty()) {
-            throw new MemberNotFoundException();
+            Optional<Member> optionalMember = memberRepository.findById(currentId);
+
+            if(!optionalMember.isPresent()){
+                throw new MemberNotFoundException();
+            }
+
+            Member member = optionalMember.get();
+            Question question = questionCreateApiRequest.toEntity(member);
+            Long questionId = questionService.createQuestion(question, questionCreateApiRequest.getTagNames());
+
+            URI uri = URI.create("/questions/" + questionId);
+
+            return ResponseEntity.created(uri).build();
+        }else{
+            throw new MemberBadCredentialsException();
         }
-
-        Member member = optionalMember.get();
-        Question question = questionCreateApiRequest.toEntity(member);
-        Long questionId = questionService.createQuestion(question, questionCreateApiRequest.getTagNames());
-
-        URI uri = URI.create("/questions/" + questionId);
-
-        return ResponseEntity.created(uri).build();
     }
 
     // 질문글 추천 기능

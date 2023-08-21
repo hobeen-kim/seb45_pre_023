@@ -134,16 +134,20 @@ public abstract class ServiceTest {
                 .build();
     }
 
+    protected Answer createanswerdetail(Member member, Question question, int num) {
+        return Answer.builder()
+                .member(member)
+                .content("test")
+                .question(question)
+                .recommend(num)
+                .build();
+    }
+
     protected Tag createTag(String name){
         return Tag.builder()
                 .tagName(name)
                 .build();
     }
 
-    protected Reply createReply3123(Answer answer) {
-        return Reply.builder()
-                .content("testReply")
-                .answer(answer)
-                .build();
-    }
+
 }
